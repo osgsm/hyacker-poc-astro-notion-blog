@@ -29,22 +29,29 @@ const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
 
 <Layout>
   <div slot="main" class={styles.main}>
-    {
-      posts.length === 0 ? (
-        <NoContents contents={posts} />
-      ) : (
-        posts.map((post) => (
-          <div class={styles.post} key={post.Slug}>
-            <PostDate post={post} />
-            <PostTags post={post} />
-            <PostTitle post={post} />
-            <PostFeaturedImage post={post} />
-            <PostExcerpt post={post} />
-            <ReadMoreLink post={post} />
-          </div>
-        ))
-      )
-    }
+    <div class="post-cards">
+      {
+        posts.length === 0 ? (
+          <NoContents contents={posts} />
+        ) : (
+          posts.map((post) => (
+            <div class="post-card" key={post.Slug}>
+              <div class="card-front">
+                <PostDate post={post} />
+                <PostTags post={post} />
+                <PostTitle post={post} />
+                <PostFeaturedImage post={post} />
+                <ReadMoreLink post={post} />
+              </div>
+              <div class="card-back">
+                <PostExcerpt post={post} />
+                <ReadMoreLink post={post} />
+              </div>
+            </div>
+          ))
+        )
+      }
+    </div>
 
     <footer>
       <Pagination currentPage={1} numberOfPages={numberOfPages} />
@@ -56,3 +63,44 @@ const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
     <BlogTagsLink heading="Categories" tags={tags} />
   </div>
 </Layout>
+
+<style>
+  .post-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .post-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    width: 400px;
+    height: 300px;
+  }
+  .post-card:hover {
+    transform: rotateY(180deg);
+  }
+  .card-front,
+  .card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card-front {
+    background-color: #eee;
+  }
+  .card-back {
+    color: white;
+    transform: rotateY(180deg);
+    background-color: #eee;
+  }
+</style>
